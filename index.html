@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Idea Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #f3f4f6;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e5e7eb;
+            border-top: 5px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            padding: 40px;
+            background: #f9fafb;
+        }
+
+        .results h2 {
+            color: #374151;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .business-idea {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4f46e5;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .business-idea h3 {
+            color: #4f46e5;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .business-idea p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .new-search-btn {
+            width: 100%;
+            padding: 15px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .new-search-btn:hover {
+            background: #4b5563;
+        }
+
+        .error {
+            display: none;
+            padding: 20px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            color: #dc2626;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AI Business Idea Generator</h1>
+            <p>Discover your next million-dollar business opportunity</p>
+        </div>
+
+        <div id="form-section" class="form-container">
+            <form id="ideaForm">
+                <div class="form-group">
+                    <label for="industry">Industry *</label>
+                    <select id="industry" name="industry" required>
+                        <option value="">Select an industry</option>
+                        <option value="technology">Technology</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="finance">Finance</option>
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="food">Food & Beverage</option>
+                        <option value="fitness">Fitness & Wellness</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="travel">Travel & Tourism</option>
+                        <option value="sustainability">Sustainability</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="real-estate">Real Estate</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="target-audience">Target Audience *</label>
+                    <select id="target-audience" name="targetAudience" required>
+                        <option value="">Select target audience</option>
+                        <option value="teenagers">Teenagers (13-19)</option>
+                        <option value="young-adults">Young Adults (20-30)</option>
+                        <option value="millennials">Millennials (31-40)</option>
+                        <option value="gen-x">Generation X (41-55)</option>
+                        <option value="baby-boomers">Baby Boomers (56+)</option>
+                        <option value="small-businesses">Small Businesses</option>
+                        <option value="enterprises">Large Enterprises</option>
+                        <option value="parents">Parents</option>
+                        <option value="students">Students</option>
+                        <option value="professionals">Working Professionals</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Personal Interests & Skills</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ai" name="interests" value="artificial-intelligence">
+                            <label for="ai">Artificial Intelligence</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="coding" name="interests" value="programming">
+                            <label for="coding">Programming/Coding</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="design" name="interests" value="design">
+                            <label for="design">Design & Creativity</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="marketing" name="interests" value="marketing">
+                            <label for="marketing">Marketing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="writing" name="interests" value="writing">
+                            <label for="writing">Writing & Content</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sales" name="interests" value="sales">
+                            <label for="sales">Sales</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="analytics" name="interests" value="data-analysis">
+                            <label for="analytics">Data Analysis</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="social-media" name="interests" value="social-media">
+                            <label for="social-media">Social Media</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">Startup Budget Range</label>
+                    <select id="budget" name="budget">
+                        <option value="">Select budget range</option>
+                        <option value="under-1k">Under $1,000</option>
+                        <option value="1k-5k">$1,000 - $5,000</option>
+                        <option value="5k-10k">$5,000 - $10,000</option>
+                        <option value="10k-25k">$10,000 - $25,000</option>
+                        <option value="25k-50k">$25,000 - $50,000</option>
+                        <option value="50k-plus">$50,000+</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="additional-info">Additional Information (Optional)</label>
+                    <textarea id="additional-info" name="additionalInfo" placeholder="Any specific requirements, preferences, or constraints you'd like us to consider..."></textarea>
+                </div>
+
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    Generate Business Ideas 🎯
+                </button>
+            </form>
+
+            <div class="error" id="errorMessage"></div>
+        </div>
+
+        <div id="loading-section" class="loading">
+            <div class="loading-spinner"></div>
+            <h3>AI is analyzing your inputs...</h3>
+            <p>This may take 30-60 seconds. Please wait while we generate personalized business ideas for you.</p>
+        </div>
+
+        <div id="results-section" class="results">
+            <h2>🎉 Your Personalized Business Ideas</h2>
+            <div id="business-ideas-container"></div>
+            <button class="new-search-btn" onclick="resetForm()">Generate New Ideas</button>
+        </div>
+    </div>
+
+    <script>
+        // N8N webhook URL for generating business ideas
+        const WEBHOOK_URL = 'https://n.feedough.co/webhook-test/generate-business-ideas';
+
+        document.getElementById('ideaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Get regular form fields
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'interests') {
+                    data[key] = value;
+                }
+            }
+            
+            // Get selected interests
+            const interests = [];
+            const interestCheckboxes = document.querySelectorAll('input[name="interests"]:checked');
+            interestCheckboxes.forEach(checkbox => {
+                interests.push(checkbox.value);
+            });
+            data.interests = interests;
+            
+            // Validate required fields
+            if (!data.industry || !data.targetAudience) {
+                showError('Please fill in all required fields (Industry and Target Audience)');
+                return;
+            }
+            
+            // Show loading state
+            showLoading();
+            
+            try {
+                // Send to N8N webhook
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // Display results
+                displayResults(result.businessIdeas || result);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Sorry, there was an error generating your business ideas. Please try again.');
+            }
+        });
+
+        function showLoading() {
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('loading-section').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function displayResults(businessIdeas) {
+            const container = document.getElementById('business-ideas-container');
+            container.innerHTML = '';
+            
+            // Handle different response formats
+            let ideas = businessIdeas;
+            if (typeof businessIdeas === 'string') {
+                // If it's a string, split into ideas
+                const ideaTexts = businessIdeas.split(/\d+\./).filter(idea => idea.trim());
+                ideas = ideaTexts.map((idea, index) => ({
+                    title: `Business Idea ${index + 1}`,
+                    description: idea.trim()
+                }));
+            } else if (Array.isArray(businessIdeas)) {
+                // If it's already an array, use as is
+                ideas = businessIdeas;
+            }
+            
+            ideas.forEach((idea, index) => {
+                const ideaElement = document.createElement('div');
+                ideaElement.className = 'business-idea';
+                ideaElement.innerHTML = `
+                    <h3>${idea.title || `Business Idea ${index + 1}`}</h3>
+                    <p>${idea.description || idea}</p>
+                `;
+                container.appendChild(ideaElement);
+            });
+            
+            document.getElementById('loading-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'block';
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('loading-section').style.display = 'none';
+            document.getElementById('form-section').style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('ideaForm').reset();
+            document.getElementById('form-section').style.display = 'block';
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('loading-section').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
