@@ -417,28 +417,56 @@
             const container = document.getElementById('business-ideas-container');
             container.innerHTML = '';
             
+            let ideas = [];
+            
             // Handle different response formats
-            let ideas = businessIdeas;
             if (typeof businessIdeas === 'string') {
-                // If it's a string, split into ideas
-                const ideaTexts = businessIdeas.split(/\d+\./).filter(idea => idea.trim());
-                ideas = ideaTexts.map((idea, index) => ({
-                    title: `Business Idea ${index + 1}`,
-                    description: idea.trim()
-                }));
+                // Split by triple dashes (---) for the current AI format
+                const sections = businessIdeas.split('---').filter(section => section.trim());
+                
+                ideas = sections.map((section, index) => {
+                    // Extract business name from the section
+                    const nameMatch = section.match(/Business Name:\s*"([^"]+)"/);
+                    const title = nameMatch ? nameMatch[1] : `Business Idea ${index + 1}`;
+                    
+                    // Clean up the description
+                    let description = section.trim();
+                    // Remove extra whitespace and format nicely
+                    description = description.replace(/\n\s*\n/g, '\n\n');
+                    description = description.replace(/\n/g, '<br>');
+                    
+                    return {
+                        title: title,
+                        description: description
+                    };
+                });
             } else if (Array.isArray(businessIdeas)) {
                 // If it's already an array, use as is
-                ideas = businessIdeas;
+                ideas = businessIdeas.map(idea => ({
+                    title: idea.title || 'Business Idea',
+                    description: typeof idea.description === 'string' ? 
+                        idea.description.replace(/\n/g, '<br>') : 
+                        (idea.description || idea)
+                }));
+            } else {
+                // Fallback for unexpected formats
+                ideas = [{
+                    title: 'Business Ideas Generated',
+                    description: JSON.stringify(businessIdeas)
+                }];
             }
             
+            // Display each idea
             ideas.forEach((idea, index) => {
-                const ideaElement = document.createElement('div');
-                ideaElement.className = 'business-idea';
-                ideaElement.innerHTML = `
-                    <h3>${idea.title || `Business Idea ${index + 1}`}</h3>
-                    <p>${idea.description || idea}</p>
-                `;
-                container.appendChild(ideaElement);
+                if (idea.title && idea.description) {
+                    const ideaElement = document.createElement('div');
+                    ideaElement.className = 'business-idea';
+                    ideaElement.innerHTML = `
+                        <h3>${idea.title}</h3>
+                        <div class="description">${idea.description}</div>
+                    `;
+                    container.appendChild(ideaElement);
+                }
             });
             
             document.getElementById('loading-section').style.display = 'none';
