@@ -1,226 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>AI Business Idea Generator</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px; margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-
         .header {
             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
+            color: white; padding: 40px 30px; text-align: center;
         }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; font-weight: 700; }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+        .form-container { padding: 40px; }
+        .form-group { margin-bottom: 30px; }
+        .form-group label { display: block; font-size: 1.1em; font-weight: 600; color: #374151; margin-bottom: 8px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 15px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1em; transition: all 0.3s ease; background: white;
         }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
         }
-
-        .form-container {
-            padding: 40px;
-        }
-
-        .form-group {
-            margin-bottom: 30px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .checkbox-item:hover {
-            background: #f3f4f6;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            transform: scale(1.2);
-        }
-
-        .checkbox-item input[type="checkbox"]:checked + label {
-            color: #4f46e5;
-            font-weight: 600;
-        }
-
-        .generate-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.2em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .generate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #e5e7eb;
-            border-top: 5px solid #4f46e5;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .results {
-            display: none;
-            padding: 40px;
-            background: #f9fafb;
-        }
-
-        .results h2 {
-            color: #374151;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-
-        .business-idea {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 5px solid #4f46e5;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .business-idea h3 {
-            color: #4f46e5;
-            margin-bottom: 10px;
-            font-size: 1.3em;
-        }
-
-        .business-idea p {
-            color: #6b7280;
-            line-height: 1.6;
-        }
-
-        .new-search-btn {
-            width: 100%;
-            padding: 15px;
-            background: #6b7280;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .new-search-btn:hover {
-            background: #4b5563;
-        }
-
-        .error {
-            display: none;
-            padding: 20px;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 10px;
-            color: #dc2626;
-            margin-top: 20px;
-        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px; }
+        .checkbox-item { display:flex; align-items:center; padding:10px; background:#f9fafb; border-radius:8px; border:2px solid transparent; transition:all .3s; }
+        .checkbox-item:hover { background:#f3f4f6; }
+        .checkbox-item input[type="checkbox"] { width:auto; margin-right:10px; transform:scale(1.2); }
+        .generate-btn { width:100%; padding:18px; background: linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%); color:white; border:none; border-radius:12px; font-size:1.2em; font-weight:600; cursor:pointer; transition:all .3s; margin-top:20px; }
+        .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(79,70,229,0.3); }
+        .generate-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+        .loading { display:none; text-align:center; padding:40px; }
+        .loading-spinner { width:50px; height:50px; border:5px solid #e5e7eb; border-top:5px solid #4f46e5; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 20px; }
+        @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        .results { display:none; padding:40px; background:#f9fafb; }
+        .results h2 { color:#374151; margin-bottom:20px; font-size:1.8em; }
+        .business-idea { background:white; padding:25px; border-radius:12px; margin-bottom:20px; border-left:5px solid #4f46e5; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+        .business-idea h3 { color:#4f46e5; margin-bottom:10px; font-size:1.3em; }
+        .business-idea p { color:#6b7280; line-height:1.6; }
+        .new-search-btn { width:100%; padding:15px; background:#6b7280; color:white; border:none; border-radius:10px; font-size:1.1em; cursor:pointer; margin-top:20px; }
+        .new-search-btn:hover { background:#4b5563; }
+        .error { display:none; padding:20px; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; color:#dc2626; margin-top:20px; }
+        ul { margin-left: 1rem; margin-top: 0.25rem; margin-bottom: 0.25rem; }
+        ol { margin-left: 1rem; margin-top: 0.25rem; margin-bottom: 0.25rem; }
     </style>
 </head>
 <body>
@@ -272,38 +105,14 @@
                 <div class="form-group">
                     <label>Personal Interests & Skills</label>
                     <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ai" name="interests" value="artificial-intelligence">
-                            <label for="ai">Artificial Intelligence</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="coding" name="interests" value="programming">
-                            <label for="coding">Programming/Coding</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="design" name="interests" value="design">
-                            <label for="design">Design & Creativity</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="marketing" name="interests" value="marketing">
-                            <label for="marketing">Marketing</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="writing" name="interests" value="writing">
-                            <label for="writing">Writing & Content</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="sales" name="interests" value="sales">
-                            <label for="sales">Sales</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="analytics" name="interests" value="data-analysis">
-                            <label for="analytics">Data Analysis</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="social-media" name="interests" value="social-media">
-                            <label for="social-media">Social Media</label>
-                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="ai" name="interests" value="artificial-intelligence"><label for="ai">Artificial Intelligence</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="coding" name="interests" value="programming"><label for="coding">Programming/Coding</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="design" name="interests" value="design"><label for="design">Design & Creativity</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="marketing" name="interests" value="marketing"><label for="marketing">Marketing</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="writing" name="interests" value="writing"><label for="writing">Writing & Content</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="sales" name="interests" value="sales"><label for="sales">Sales</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="analytics" name="interests" value="data-analysis"><label for="analytics">Data Analysis</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="social-media" name="interests" value="social-media"><label for="social-media">Social Media</label></div>
                     </div>
                 </div>
 
@@ -325,9 +134,7 @@
                     <textarea id="additional-info" name="additionalInfo" placeholder="Any specific requirements, preferences, or constraints you'd like us to consider..."></textarea>
                 </div>
 
-                <button type="submit" class="generate-btn" id="generateBtn">
-                    Generate Business Ideas 🎯
-                </button>
+                <button type="submit" class="generate-btn" id="generateBtn">Generate Business Ideas 🎯</button>
             </form>
 
             <div class="error" id="errorMessage"></div>
@@ -350,6 +157,30 @@
         // N8N webhook URL for generating business ideas
         const WEBHOOK_URL = 'https://n.feedough.co/webhook-test/generate-business-ideas';
 
+        // ---------- Helpers ----------
+        // escape to avoid XSS when inserting text
+        function escapeHtml(str) {
+          return String(str || '').replace(/[&<>"']/g, function(m) {
+            return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);
+          });
+        }
+
+        // Convert markdown links [text](url) or plain URLs into clickable anchors
+        function markdownOrLinkToHtml(s) {
+          if (!s) return '';
+          const str = String(s).trim();
+          const mdRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+          if (mdRegex.test(str)) {
+            return str.replace(mdRegex, (m, text, url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`);
+          }
+          const urlRegex = /(https?:\/\/[^\s]+)/g;
+          if (urlRegex.test(str)) {
+            return str.replace(urlRegex, url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`);
+          }
+          return escapeHtml(str);
+        }
+
+        // ---------- Form submit ----------
         document.getElementById('ideaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -385,9 +216,7 @@
                 // Send to N8N webhook
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 
@@ -397,7 +226,7 @@
                 
                 const result = await response.json();
                 
-                // Display results
+                // Display results — our updated function will render all fields
                 displayResults(result.businessIdeas || result);
                 
             } catch (error) {
@@ -406,71 +235,12 @@
             }
         });
 
+        // ---------- UI helpers ----------
         function showLoading() {
             document.getElementById('form-section').style.display = 'none';
             document.getElementById('results-section').style.display = 'none';
             document.getElementById('loading-section').style.display = 'block';
             document.getElementById('errorMessage').style.display = 'none';
-        }
-
-        function displayResults(businessIdeas) {
-            const container = document.getElementById('business-ideas-container');
-            container.innerHTML = '';
-            
-            let ideas = [];
-            
-            // Handle different response formats
-            if (typeof businessIdeas === 'string') {
-                // Split by triple dashes (---) for the current AI format
-                const sections = businessIdeas.split('---').filter(section => section.trim());
-                
-                ideas = sections.map((section, index) => {
-                    // Extract business name from the section
-                    const nameMatch = section.match(/Business Name:\s*"([^"]+)"/);
-                    const title = nameMatch ? nameMatch[1] : `Business Idea ${index + 1}`;
-                    
-                    // Clean up the description
-                    let description = section.trim();
-                    // Remove extra whitespace and format nicely
-                    description = description.replace(/\n\s*\n/g, '\n\n');
-                    description = description.replace(/\n/g, '<br>');
-                    
-                    return {
-                        title: title,
-                        description: description
-                    };
-                });
-            } else if (Array.isArray(businessIdeas)) {
-                // If it's already an array, use as is
-                ideas = businessIdeas.map(idea => ({
-                    title: idea.title || 'Business Idea',
-                    description: typeof idea.description === 'string' ? 
-                        idea.description.replace(/\n/g, '<br>') : 
-                        (idea.description || idea)
-                }));
-            } else {
-                // Fallback for unexpected formats
-                ideas = [{
-                    title: 'Business Ideas Generated',
-                    description: JSON.stringify(businessIdeas)
-                }];
-            }
-            
-            // Display each idea
-            ideas.forEach((idea, index) => {
-                if (idea.title && idea.description) {
-                    const ideaElement = document.createElement('div');
-                    ideaElement.className = 'business-idea';
-                    ideaElement.innerHTML = `
-                        <h3>${idea.title}</h3>
-                        <div class="description">${idea.description}</div>
-                    `;
-                    container.appendChild(ideaElement);
-                }
-            });
-            
-            document.getElementById('loading-section').style.display = 'none';
-            document.getElementById('results-section').style.display = 'block';
         }
 
         function showError(message) {
@@ -486,6 +256,108 @@
             document.getElementById('results-section').style.display = 'none';
             document.getElementById('loading-section').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // ---------- Updated displayResults (renders every field) ----------
+        function displayResults(businessIdeas) {
+            const container = document.getElementById('business-ideas-container');
+            container.innerHTML = '';
+
+            let ideas = [];
+
+            // handle string-based legacy responses
+            if (typeof businessIdeas === 'string') {
+              const sections = businessIdeas.split('---').filter(s => s.trim());
+              ideas = sections.map((section, index) => {
+                const nameMatch = section.match(/(Name|Business Name)\s*[:\-]\s*["']?([^\n"']+)/i);
+                const title = nameMatch ? nameMatch[2].trim() : `Business Idea ${index + 1}`;
+                const description = section.trim().replace(/\n/g, '<br>');
+                return { title, description };
+              });
+            } else if (Array.isArray(businessIdeas)) {
+              // map each idea and pick many possible key variants
+              ideas = businessIdeas.map(raw => {
+                const idea = raw || {};
+                const title = idea.name || idea.title || idea.BusinessName || idea["Business Name"] || 'Business Idea';
+                const description = idea.description || idea.desc || idea.summary || '';
+                return {
+                  title: title,
+                  description: description,
+                  problem: idea.problem || idea['Problem Statement'] || '',
+                  target_audience: idea.target_audience || idea.targetAudience || idea['Target'] || idea['Target Customer'] || '',
+                  revenue_model: idea.revenue_model || idea.revenueModel || idea.Revenue || '',
+                  startup_cost: idea.startup_cost || idea.startupCost || idea['Startup Requirements'] || '',
+                  launch_steps: Array.isArray(idea.launch_steps) ? idea.launch_steps :
+                                Array.isArray(idea.launchSteps) ? idea.launchSteps :
+                                (typeof idea.launch_steps === 'string' ? idea.launch_steps.split(/\r?\n| \| |;|, Month \d+:|Month \d+:/).map(s => s.trim()).filter(Boolean) : []),
+                  potential_challenges: idea.potential_challenges || idea.potentialChallenges || idea.challenges || '',
+                  growth_scalability: idea.growth_scalability || idea.growthScalability || idea.growth || '',
+                  sources: Array.isArray(idea.sources) ? idea.sources : (typeof idea.sources === 'string' ? idea.sources.split(/\r?\n|;|\|/).map(s=>s.trim()).filter(Boolean) : (idea.references ? (Array.isArray(idea.references) ? idea.references : [idea.references]) : [])),
+                  why_now: idea.why_now || idea.whyNow || idea.timing || '',
+                };
+              });
+            } else {
+              // fallback: convert object to one idea
+              ideas = [{
+                title: 'Business Ideas Generated',
+                description: JSON.stringify(businessIdeas, null, 2)
+              }];
+            }
+
+            // Now render each idea with all fields
+            ideas.forEach((idea) => {
+              const ideaElement = document.createElement('div');
+              ideaElement.className = 'business-idea';
+
+              // build HTML pieces for each optional section
+              const descriptionHtml = idea.description ? `<p><strong>Description:</strong> ${idea.description.replace(/\n/g, '<br>')}</p>` : '';
+              const whyNowHtml = idea.why_now ? `<p><strong>Why now:</strong> ${escapeHtml(idea.why_now)}</p>` : '';
+              const problemHtml = idea.problem ? `<p><strong>Problem:</strong> ${escapeHtml(idea.problem)}</p>` : '';
+              const targetHtml = idea.target_audience ? `<p><strong>Target audience:</strong> ${escapeHtml(Array.isArray(idea.target_audience) ? idea.target_audience.join(', ') : idea.target_audience)}</p>` : '';
+              const revenueHtml = idea.revenue_model ? `<p><strong>Revenue model:</strong> ${escapeHtml(idea.revenue_model)}</p>` : '';
+              const costHtml = idea.startup_cost ? `<p><strong>Startup cost:</strong> ${escapeHtml(idea.startup_cost)}</p>` : '';
+
+              // launch steps -> ordered list
+              let launchHtml = '';
+              if (Array.isArray(idea.launch_steps) && idea.launch_steps.length) {
+                launchHtml = '<p><strong>Launch steps:</strong></p><ol>';
+                idea.launch_steps.forEach(ls => launchHtml += `<li>${escapeHtml(ls)}</li>`);
+                launchHtml += '</ol>';
+              }
+
+              const challengesHtml = idea.potential_challenges ? `<p><strong>Potential challenges:</strong> ${escapeHtml(idea.potential_challenges)}</p>` : '';
+              const growthHtml = idea.growth_scalability ? `<p><strong>Growth / scalability:</strong> ${escapeHtml(idea.growth_scalability)}</p>` : '';
+
+              // sources -> render as list with link parsing
+              let sourcesHtml = '';
+              if (Array.isArray(idea.sources) && idea.sources.length) {
+                sourcesHtml = '<p><strong>Sources:</strong></p><ul>';
+                idea.sources.forEach(s => {
+                  const html = markdownOrLinkToHtml(s);
+                  sourcesHtml += `<li>${html}</li>`;
+                });
+                sourcesHtml += '</ul>';
+              }
+
+              ideaElement.innerHTML = `
+                <h3>${escapeHtml(idea.title)}</h3>
+                ${descriptionHtml}
+                ${whyNowHtml}
+                ${problemHtml}
+                ${targetHtml}
+                ${revenueHtml}
+                ${costHtml}
+                ${launchHtml}
+                ${challengesHtml}
+                ${growthHtml}
+                ${sourcesHtml}
+              `;
+
+              container.appendChild(ideaElement);
+            });
+
+            document.getElementById('loading-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'block';
         }
     </script>
 </body>
